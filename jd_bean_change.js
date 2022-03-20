@@ -29,6 +29,7 @@ let allMessage2Gp2 = '';
 let allMessageMonthGp2 = '';
 let IndexGp2 = 0;
 
+
 let MessageUserGp3 = '';
 let ReceiveMessageGp3 = '';
 let WarnMessageGp3 = '';
