@@ -18,7 +18,6 @@ inputs:
       - 'package.json'
       - 'package-lock.json'
       - 'LICENSE'
-      - 'ql.js'
       - 'jd_CheckCK.js'
   handler: index.main_handler #入口
   runtime: Nodejs12.16 # 运行环境 默认 Nodejs12.16
