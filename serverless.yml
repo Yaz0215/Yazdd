@@ -16,6 +16,7 @@ inputs:
       - 'backUp/**'
       - 'icon/**'
       - 'package.json'
+      - 'ql.js'
       - 'package-lock.json'
       - 'LICENSE'
       - 'jd_CheckCK.js'
