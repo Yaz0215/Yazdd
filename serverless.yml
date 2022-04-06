@@ -36,6 +36,12 @@ inputs:
           cronExpression: "0 0 * * * * *"
           enable: true
           argument: config
+    - timer:
+        parameters:
+          name: jd_xs_zzl
+          cronExpression: "0 0 6 * * 5 *"
+          enable: true
+          argument: jd_xs_zzl     
     - timer: #超市蓝币兑换
         parameters:
           name: blueCoin
