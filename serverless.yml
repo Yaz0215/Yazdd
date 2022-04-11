@@ -56,12 +56,6 @@ inputs:
           argument: jd_cfd
     - timer:
         parameters:
-          name: cfd_pearl
-          cronExpression: "50 59 * * * * *"
-          enable: true
-          argument: jd_cfd_pearl_ex
-    - timer:
-        parameters:
           name: jxmc
           cronExpression: "59 19 0 * * * *"
           enable: true
