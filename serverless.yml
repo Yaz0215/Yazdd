@@ -36,6 +36,12 @@ inputs:
           cronExpression: "0 0 * * * * *"
           enable: true
           argument: config
+     - timer:
+        parameters:
+          name: fruit_pet
+          cronExpression: "0 5 6,1218 * * * *"
+          enable: true
+          argument: jd_fruit&jd_pet   
     - timer:
         parameters:
           name: jd_xs_zzl
@@ -64,7 +70,7 @@ inputs:
         parameters:
           name: jd_redrain_half
           cronExpression: "59 29 21,22 * * * *"
-          enable: true
+          enable: false
           argument: jd_redrain_half
   environment: #  环境变量
     variables: #  环境变量对象
