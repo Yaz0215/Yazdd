@@ -36,7 +36,7 @@ inputs:
           cronExpression: "0 0 * * * * *"
           enable: true
           argument: config
-     - timer:
+    - timer:
         parameters:
           name: jd_fruit&jd_pet
           cronExpression: "0 5 6,12,18 * * * *"
