@@ -39,7 +39,7 @@ inputs:
      - timer:
         parameters:
           name: fruit_pet
-          cronExpression: "0 5 6,1218 * * * *"
+          cronExpression: "0 5 6,12,18 * * * *"
           enable: true
           argument: jd_fruit&jd_pet   
     - timer:
