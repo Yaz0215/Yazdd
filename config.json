@@ -1,4 +1,6 @@
 {
+    "jd_zmhwlh": [16, 19, 21],
+    "jd_xtclh": [16, 19, 21],
     "jd_gjlh": [10, 13, 16, 19],
     "jd_mncryyj": [9, 12, 15, 18, 21],
     "jd_carnivalcity": [0, 6, 12, 18],
@@ -20,7 +22,7 @@
     "jd_sign_graphics": [5],
     "jd_cfd": [6, 8, 10, 12, 14, 16, 18, 20, 22],
     "jd_dreamFactory": [4, 6, 8, 10, 12, 14, 16, 18, 20, 22],
-    "jd_jdtj_winner": [6, 12, 15, 21],
+    "jd_jdtj_winner": [0, 3, 6, 9, 12, 15, 18, 21],
     "jd_bean_home": [7],
     "jd_cash": [7],
     "jd_ccSign": [7],
