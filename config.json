@@ -79,7 +79,7 @@
 	"jd_z_health_energy": [6, 8, 10, 12, 14, 16, 18, 20, 22],
 	"jd_zjb": [7],
 	"params": 
-    {
+     {
 		"global":
         {
 			"timeout": 10
@@ -93,4 +93,4 @@
 			"timeout": 55
 		}
 	}
-}
+     }
