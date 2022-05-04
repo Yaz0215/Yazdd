@@ -52,7 +52,7 @@ inputs:
         parameters:
           name: blueCoin
           cronExpression: "0 59 23 * * * *"
-          enable: false
+          enable: true
           argument: jd_blueCoin
     - timer:
         parameters:
