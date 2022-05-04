@@ -17,7 +17,7 @@ inputs:
       - 'icon/**'
       - 'package.json'
       - 'ql.js'
-      - '*.TS'
+      - '*.ts'
       - 'package-lock.json'
       - 'LICENSE'
       - 'jd_CheckCK.js'
