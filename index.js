@@ -6,7 +6,7 @@ exports.main_handler = async (event, context, callback) => {
     if (event["TriggerName"] == 'remote') {
         console.log('remote触发:', event["Message"])
         const got = require('got')
-        const links = ['https://raw.fastgit.org/Yaz0215/Yazdd/main/','https://raw.githubusercontent.com/Yaz0215/Yazdd/main/']
+        const links = ['https://raw.fastgit.org/shufflewzc/faker2/main/','https://raw.githubusercontent.com/shufflewzc/faker2/main/']
         for (let i = 0; i < links.length; i++) {
             try {
                 const { body } = await got(`${links[i]}${event["Message"]}.js`, {
