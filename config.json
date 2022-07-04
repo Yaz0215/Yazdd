@@ -44,6 +44,7 @@
 	"jd_lottery": [0, 10],
 	"jd_live": [12, 13, 14],
 	"jd_m_sign": [0],
+	"jd_mfredrain": [10],
 	"jd_moneyTree_help": [6, 10, 14, 18, 22],
 	"jd_moneyTree": [6, 14, 22],
 	"jd_ms": [10],
