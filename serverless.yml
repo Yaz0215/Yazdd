@@ -45,6 +45,12 @@ inputs:
           argument: jd_pet&jd_fruit   
     - timer:
         parameters:
+          name: fruit_cc
+          cronExpression: "0 5 8,13,20 * * * *"
+          enable: true
+          argument: jd_fruit_cc   
+    - timer:
+        parameters:
           name: jd_xs_zzl
           cronExpression: "0 0 6 * * 5 *"
           enable: true
