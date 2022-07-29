@@ -46,7 +46,7 @@ inputs:
     - timer:
         parameters:
           name: planbean
-          cronExpression: "0 10 7,9,11,13,15,17,19,21 * * * *"
+          cronExpression: "0 10 7,11,15,21 * * * *"
           enable: true
           argument: jd_plantBean_Mod   
     - timer:
