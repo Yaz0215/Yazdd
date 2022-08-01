@@ -1,8 +1,10 @@
-/**
-特务Z，首页下拉
-不自动开卡，会尝试领取开卡奖励
-5 6,10,18 * * * jd_superBrandZII.js
- */
+/*
+ 特务集卡
+ 脚本没有自动开卡，会尝试领取开卡奖励
+cron:35 10,18,20 * * *
+
+35 10,18,20 * * * jd_superBrand.js
+* */
 const $ = new Env('特务Z-II');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -35,7 +37,7 @@ if ($.isNode()) {
         $.isLogin = true;
         $.nickName = '';
         $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-        await TotalBean();
+        //await TotalBean();
         console.log(`\n*****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
         if (!$.isLogin) {
             $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -50,7 +52,7 @@ if ($.isNode()) {
         }catch (e) {
             console.log(JSON.stringify(e));
         }
-		if (i == 0 && $.flag) return;
+		if ($.flag) return;
         await $.wait(1000);
     }
     if($.allInvite.length > 0 ){
@@ -106,7 +108,7 @@ async function main() {
         console.log(`可抽奖次数:${$.callNumber}`);
     }
     for (let i = 0; i < $.callNumber; i++) {
-        console.log(`进行第${i+1}抽奖：`);;
+        console.log(`进行抽奖`);
         await takeRequest('superBrandTaskLottery');//抽奖
         await $.wait(1000);
     }
@@ -133,7 +135,7 @@ async function doTask(){
             await takeRequest('superBrandDoTask');
             await $.wait(1000);
             $.runFlag = true;
-        }else if($.oneTask.assignmentType === 2){  //助力任务
+        }else if($.oneTask.assignmentType === 2){
             console.log(`助力码：${$.oneTask.ext.assistTaskDetail.itemId}`);
             $.allInvite.push({
                 'userName':$.UserName,
@@ -157,6 +159,7 @@ async function doTask(){
                     await $.wait(3000);
                 }
             }
+						$.runFlag = true;
             //}
         }
     }
@@ -214,7 +217,7 @@ function dealReturn(type, data) {
     }
     switch (type) {
         case 'superBrandSecondFloorMainPage':
-            $.bizCode = data.data.bizCode;
+						$.bizCode = data.data.bizCode;	
             if(data.code === '0' &&  data.data && data.data.result){
                 $.activityInfo = data.data.result;
             }
