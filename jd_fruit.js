@@ -32,12 +32,10 @@ let cookiesArr = [], cookie = '', isBox = false, notify, allMessage = '';
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 
-zlcurl = process.env.JD_ZLC_URL ? process.env.JD_ZLC_URL : "http://zlc1.chaoyi996.com:8880";
-if (zlcurl == 'http://150.230.202.36:8880') {
-    zlcurl = "http://zlc1.chaoyi996.com:8880"
-}
-const JD_ZLC_URL = zlcurl
+const JD_ZLC_URL = process.env.JD_ZLC_URL ? process.env.JD_ZLC_URL : "https://zlc1.chaoyi996.com";
+
 let newShareCodes = [];
+let codeType = 0;
 let shareCodes = []
 let jdFruitShareArr = []
 let message = '', subTitle = '', option = {}, isFruitFinished = false;
@@ -75,7 +73,6 @@ let NoNeedCodes = [];
         return;
     }
     // if (llhelp) {
-    console.log('开始收集您的互助码，用于账号内部互助，请稍等...');
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -765,6 +762,15 @@ async function masterHelpShare() {
     let helpSuccessPeoples = '';//成功助力好友
     // if (llhelp) {
     console.log('开始助力好友')
+
+
+    helpStatisticArr = {}
+    helpStatisticArr['fromCode'] = $.farmInfo.farmUserPro.shareCode
+    helpStatisticArr['codeType'] = codeType;
+    helpStatisticArr['results'] = {};
+
+    helpStatisticStatus = 2
+    helpStatisticRemark = ''
     for (let code of newShareCodes) {
         if (NoNeedCodes) {
             var llnoneed = false;
@@ -790,35 +796,72 @@ async function masterHelpShare() {
             continue
         }
         await masterHelp(code);
-
+        
         if ($.helpResult.code === '0') {
             if ($.helpResult.helpResult.code === '0') {
                 //助力成功
-                $.post({ url: `http://zlc1.chaoyi996.com:8880/api/app/booster-code/submit-real-contribution?type=0&ownerCode=${encodeURI($.farmInfo.farmUserPro.shareCode)}`, timeout: 10000, }, (err, resp, data) => { });
+                helpStatisticStatus = 1;
                 salveHelpAddWater += $.helpResult.helpResult.salveHelpAddWater;
                 console.log(`【助力好友结果】: 已成功给【${$.helpResult.helpResult.masterUserInfo.nickName}】助力`);
                 console.log(`给好友【${$.helpResult.helpResult.masterUserInfo.nickName}】助力获得${$.helpResult.helpResult.salveHelpAddWater}g水滴`)
                 helpSuccessPeoples += ($.helpResult.helpResult.masterUserInfo.nickName || '匿名用户') + ',';
             } else if ($.helpResult.helpResult.code === '8') {
+                helpStatisticStatus = 3;
                 console.log(`【助力好友结果】: 助力【${$.helpResult.helpResult.masterUserInfo.nickName}】失败，您今天助力次数已耗尽`);
             } else if ($.helpResult.helpResult.code === '9') {
+                helpStatisticStatus = 5;
                 console.log(`【助力好友结果】: 之前给【${$.helpResult.helpResult.masterUserInfo.nickName}】助力过了`);
             } else if ($.helpResult.helpResult.code === '10') {
                 NoNeedCodes.push(code);
+                helpStatisticStatus = 4;
                 console.log(`【助力好友结果】: 好友【${$.helpResult.helpResult.masterUserInfo.nickName}】已满五人助力`);
             } else {
+                helpStatisticStatus = 6;
+                helpStatisticRemark = JSON.stringify($.helpResult.helpResult)
                 console.log(`助力其他情况：${JSON.stringify($.helpResult.helpResult)}`);
             }
             console.log(`【今日助力次数还剩】${$.helpResult.helpResult.remainTimes}次\n`);
             remainTimes = $.helpResult.helpResult.remainTimes;
             if ($.helpResult.helpResult.remainTimes === 0) {
                 console.log(`您当前助力次数已耗尽，跳出助力`);
-                break
+                if (!(helpStatisticStatus in helpStatisticArr['results'])) {
+                    helpStatisticArr['results'][helpStatisticStatus] = [code]
+                } else {
+                    helpStatisticArr['results'][helpStatisticStatus].push(code)
+                }
+                break;
             }
         } else {
+            helpStatisticStatus = 2;
+            helpStatisticRemark = JSON.stringify($.helpResult.helpResult)
             console.log(`助力失败::${JSON.stringify($.helpResult)}`);
         }
+        if (!(helpStatisticStatus in helpStatisticArr['results'])) {
+            helpStatisticArr['results'][helpStatisticStatus] = [code]
+        } else {
+            helpStatisticArr['results'][helpStatisticStatus].push(code)
+        }
     }
+
+    helpStatisticArr['Remark'] = helpStatisticRemark;
+
+    console.log(`当前使用助力池${JD_ZLC_URL}`)
+    r = { url: `https://zlc1.chaoyi996.com/api/app/booster-code/submit-real-contribution`, body: JSON.stringify(helpStatisticArr), headers: { "Content-Type": "application/json" } };
+    $.post(r, (err, resp, data) => {
+        try {
+            if (err) {
+                console.log(`${JSON.stringify(err)}`)
+                console.log(`${$.name} 提交助力结果API请求失败`)
+            } else {
+                if (data) {
+                    console.log(`提交成功`)
+                    data = JSON.parse(data);
+                }
+            }
+        } catch (e) {
+            $.logErr(e, resp)
+        }
+    })
     // }
     if ($.isLoon() || $.isQuanX() || $.isSurge()) {
         let helpSuccessPeoplesKey = timeFormat() + $.farmInfo.farmUserPro.shareCode;
@@ -845,6 +888,7 @@ async function masterHelpShare() {
     }
     message += `【今日剩余助力👬】${remainTimes}次\n`;
 }
+
 //水滴雨
 async function executeWaterRains() {
     let executeWaterRain = !$.farmTask.waterRainInit.f;
@@ -1103,30 +1147,6 @@ async function GetCollect() {
         newShareCodes = [];
         shareCodesArr = [];
 
-        if (process.env.FRUITSHARECODES) {
-            if (process.env.FRUITSHARECODES.indexOf('&') > -1) {
-                console.log(`您的东东农场互助码选择的是用&隔开\n`)
-                shareCodesArr = process.env.FRUITSHARECODES.split('&');
-            } else if (process.env.FRUITSHARECODES.indexOf('\n') > -1) {
-                console.log(`您的东东农场互助码选择的是用换行隔开\n`)
-                shareCodesArr = process.env.FRUITSHARECODES.split('\n');
-            } else {
-                shareCodesArr = process.env.FRUITSHARECODES.split();
-            }
-        }
-
-        if (shareCodesArr[$.index - 1]) {
-            newShareCodes = shareCodesArr[$.index - 1].split('@');
-        } else {
-            const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
-            if (shareCodes.length > 0) {
-                newShareCodes = shareCodes[tempIndex].split('@');
-            }
-        }
-        if ($.isNode() && !process.env.FRUITSHARECODES) {
-            console.log(`您未填写助力码变量，优先进行账号内互助，再帮【zero205】助力`);
-            newShareCodes = [...(jdFruitShareArr || []), ...(newShareCodes || [])]
-        }
         const readShareCodeRes = await readShareCode(jdFruitShareArr[$.index - 1]);
         if (readShareCodeRes && readShareCodeRes.code === 200) {
             newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
